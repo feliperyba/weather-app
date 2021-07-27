@@ -1,0 +1,575 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Weather API",
+        "description": "Simple but secure NodeJS Weather RestAPI",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3000/",
+            "description": "Local server"
+        }
+    ],
+    "tags": [
+        {
+            "name": "weather",
+            "description": "General weather data forecast and operations"
+        },
+        {
+            "name": "users",
+            "description": "User data and access control over the API"
+        }
+    ],
+    "paths": {
+        "/weather": {
+            "post": {
+                "tags": [
+                    "weather"
+                ],
+                "summary": "Add new weather forecast data",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json:": {
+                            "schema": {
+                                "$ref": "#/components/schemas/weather"
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": [
+                            "write:weather"
+                        ]
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "An acknowledgement from the API that data was inserted, returning id value",
+                        "content": {
+                            "text/plain:": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "hR01XZ2u3"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequest"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    }
+                }
+            }
+        },
+        "/weather/{weatherId}": {
+            "get": {
+                "tags": [
+                    "weather"
+                ],
+                "summary": "Get weather forecast data based on Id parameter",
+                "responses": {
+                    "200": {
+                        "description": "An acknowledgement from the API that data was found, returning the object",
+                        "content": {
+                            "application/json:": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/weather"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "weather"
+                ],
+                "summary": "Update weather forecast data based on Id parameter",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json:": {
+                            "schema": {
+                                "$ref": "#/components/schemas/weather"
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": [
+                            "write:weather"
+                        ]
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "An acknowledgement from the API that data was updated"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequest"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "weather"
+                ],
+                "summary": "Update weather forecast data based on Id parameter",
+                "requestBody": {
+                    "content": {
+                        "application/json:": {
+                            "schema": {
+                                "$ref": "#/components/schemas/weather"
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": [
+                            "write:weather"
+                        ]
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "An acknowledgement from the API that data was updated"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequest"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "weather"
+                ],
+                "summary": "Delete weather forecast data based on Id parameter",
+                "security": [
+                    {
+                        "bearerAuth": [
+                            "write:weather"
+                        ]
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "An acknowledgement from the API that data was deleted"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                }
+            }
+        },
+        "/weather/city/{cityName}": {
+            "get": {
+                "tags": [
+                    "weather"
+                ],
+                "summary": "Get weather forecast data based on city name parameter",
+                "requestBody": {
+                    "content": {
+                        "application/json:": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "daysRange": {
+                                        "type": "number",
+                                        "example": 3
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "An acknowledgement from the API that data was found, returning the object",
+                        "content": {
+                            "application/json:": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/weather"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequest"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                }
+            }
+        },
+        "/weather/city/{cityName}/{date}": {
+            "get": {
+                "tags": [
+                    "weather"
+                ],
+                "summary": "Get weather forecast data based on city name and date parameter",
+                "responses": {
+                    "200": {
+                        "description": "An acknowledgement from the API that data was found, returning the object",
+                        "content": {
+                            "application/json:": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/weather"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                }
+            }
+        },
+        "/users": {
+            "post": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Add new user data",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json:": {
+                            "schema": {
+                                "$ref": "#/components/schemas/user"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "An acknowledgement from the API that data was inserted, returning id value",
+                        "content": {
+                            "text/plain:": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "hR01XZ2u3"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequest"
+                    }
+                }
+            }
+        },
+        "/users/{userId}": {
+            "get": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Get user data based on Id parameter",
+                "security": [
+                    {
+                        "bearerAuth": [
+                            "read:users",
+                            "write:users"
+                        ]
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "An acknowledgement from the API that data was found, returning the object",
+                        "content": {
+                            "application/json:": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/user"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Update user data based on Id parameter",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json:": {
+                            "schema": {
+                                "$ref": "#/components/schemas/user"
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": [
+                            "write:users"
+                        ]
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "An acknowledgement from the API that data was updated"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequest"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Update user data based on Id parameter",
+                "requestBody": {
+                    "content": {
+                        "application/json:": {
+                            "schema": {
+                                "$ref": "#/components/schemas/user"
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": [
+                            "write:users"
+                        ]
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "An acknowledgement from the API that data was updated"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequest"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Delete user data based on Id parameter",
+                "security": [
+                    {
+                        "bearerAuth": [
+                            "write:users"
+                        ]
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "An acknowledgement from the API that data was deleted"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                }
+            }
+        },
+        "/": {
+            "get": {
+                "summary": "Check if API is responding",
+                "responses": {
+                    "200": {
+                        "description": "An acknowledgement from the API.",
+                        "content": {
+                            "text/plain:": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "Server live at port : 3000"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "weather": {
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "example": "hR01XZ2u3"
+                    },
+                    "location": {
+                        "type": "object",
+                        "properties": {
+                            "city": {
+                                "type": "text",
+                                "example": "Zaragoza"
+                            },
+                            "country": {
+                                "type": "text",
+                                "example": "Spain"
+                            }
+                        }
+                    },
+                    "date": {
+                        "type": "string",
+                        "example": "2021-01-01"
+                    },
+                    "forecast": {
+                        "type": "number",
+                        "example": 4
+                    },
+                    "hourly_temperature": {
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        },
+                        "example": [
+                            22.5,
+                            34,
+                            35,
+                            40
+                        ]
+                    }
+                }
+            },
+            "user": {
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "example": "hR01XZ2u3"
+                    },
+                    "login": {
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "password": {
+                        "type": "string",
+                        "example": "!!!S3Cr3t!!!"
+                    },
+                    "permissionLevel": {
+                        "type": "number",
+                        "example": 1
+                    }
+                }
+            },
+            "error": {
+                "properties": {
+                    "errors": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/errorMsg"
+                        }
+                    }
+                }
+            },
+            "errorMsg": {
+                "properties": {
+                    "msg": {
+                        "type": "string",
+                        "example": "Invalid Value"
+                    },
+                    "param": {
+                        "type": "string",
+                        "example": "forecast"
+                    },
+                    "location": {
+                        "type": "string",
+                        "example": "body"
+                    }
+                }
+            }
+        },
+        "responses": {
+            "UnauthorizedError": {
+                "description": "Access token is missing or invalid",
+                "content": {}
+            },
+            "BadRequest": {
+                "description": "Request does not provide the required data",
+                "content": {
+                    "application/json:": {
+                        "schema": {
+                            "$ref": "#/components/schemas/error"
+                        }
+                    }
+                }
+            },
+            "NotFound": {
+                "description": "Request return not found message",
+                "content": {
+                    "application/json:": {
+                        "schema": {
+                            "properties": {
+                                "error": {
+                                    "type": "string",
+                                    "example": "Weather 124 was not found"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT",
+                "scopes": {
+                    "read:users": "read user data",
+                    "write:users": "write user data",
+                    "read:weather": "read weather data",
+                    "write:weather": "write weather data"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,35 @@
+version: '3.8'
+services:  
+  mongo-service:
+    image: mongo
+    networks:
+      - mongodb_network
+    volumes:
+      - ./data:/data/db
+    ports:
+      - 27017:27017
+    restart:
+      "unless-stopped"
+    container_name: mongo-service
+  weather-service:
+    build: ./weather-api
+    environment:
+      - MONGODB_SERVER=mongodb://mongo-service:27017/api-db
+    networks:
+      - mongodb_network
+    links:
+      - mongo
+    ports: 
+      - 3000:3000
+    container_name: weather-service
+  weather-app:
+    build: ./weather-app
+    environment:
+      - WEATHER_API_HOST=weather-service
+    ports: 
+      - 80:80
+    container_name: weather-app
+networks:
+  mongodb_network:
+    name: mongodb_network
+    driver: bridge
