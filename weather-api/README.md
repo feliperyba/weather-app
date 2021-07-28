@@ -29,7 +29,7 @@ $ npm run test
 OpenAPI document page will be served under
 
 ```
-$ localhost:3000/api-doc/
+$ localhost:3000/api-docs/
 ```
 
 
